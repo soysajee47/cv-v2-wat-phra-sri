@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soysajee | Portfolio (Moon Lover Edition)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Prompt:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-base: #040914;
+            --bg-accent: #0f172a;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --primary: #818cf8;
+            /* Soft moon glow */
+            --secondary: #c084fc;
+            /* Violet twilight */
+            --tertiary: #38bdf8;
+            /* Star blue */
+            --card-bg: rgba(15, 23, 42, 0.4);
+            --card-border: rgba(129, 140, 248, 0.2);
+            --glass-glow: rgba(192, 132, 252, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .logo {
+            font-family: 'Outfit', 'Prompt', sans-serif;
+        }
+
+        /* --- Canvas Background (Stars & Moon Dust) --- */
+        #star-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Ambient glowing circles behind content */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: pulse-glow 10s infinite alternate;
+        }
+
+        .glow-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--primary), transparent 70%);
+        }
+
+        .glow-2 {
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, var(--secondary), transparent 70%);
+            animation-delay: -5s;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 0.6;
+            }
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(4, 9, 20, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .moon-icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a.nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a.nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav a.nav-link:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+        }
+
+        nav a.nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* --- Hero Section --- */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 5%;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 10;
+            animation: fade-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes fade-up {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .greeting {
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .hero-content h1 span {
+            background: linear-gradient(135deg, #e2e8f0, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(192, 132, 252, 0.3);
+            display: inline-block;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 1rem 2.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(129, 140, 248, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(129, 140, 248, 0.2);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        /* --- Sections --- */
+        section {
+            padding: 6rem 10%;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: #fff;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+
+        /* --- Glassmorphism Profile --- */
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            padding: 4rem;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02), 0 20px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decoration line inside glass card */
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.5;
+        }
+
+        .profile-avatar {
+            flex-shrink: 0;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle at 30% 30%, rgba(129, 140, 248, 0.2), transparent);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            box-shadow: 0 0 40px rgba(129, 140, 248, 0.2);
+            position: relative;
+        }
+
+        .profile-avatar::after {
+            content: '🌕';
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+            animation: orbital 10s linear infinite;
+            transform-origin: -80px 100px;
+        }
+
+        @keyframes orbital {
+            from {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.2);
+            }
+
+            to {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 1.1rem;
+        }
+
+        /* --- Stunning Projects Grid --- */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid var(--card-border);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, var(--glass-glow), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .project-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(192, 132, 252, 0.5);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.8), 0 0 20px var(--glass-glow);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-icon {
+            transform: scale(1.2) rotate(-5deg);
+        }
+
+        .project-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .project-card p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-weight: 300;
+            flex-grow: 1;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            padding: 0.4rem 1rem;
+            background: rgba(129, 140, 248, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(129, 140, 248, 0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+            letter-spacing: 0.5px;
+        }
+
+        /* Project buttons */
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .project-link:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(192, 132, 252, 0.4);
+            letter-spacing: 1px;
+        }
+
+        /* Large Map Showcase Card */
+        .project-card.featured {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            padding: 0;
+        }
+
+        .featured-content {
+            padding: 3rem;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            border-radius: 0 24px 24px 0;
+            overflow: hidden;
+            border-left: 1px solid var(--card-border);
+            position: relative;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(4, 9, 20, 0.8);
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 0.9rem;
+        }
+
+        footer .oracle-sig {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            font-family: var(--font-mono);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .profile-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+                padding: 2.5rem;
+            }
+
+            .project-card.featured {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                border-radius: 0 0 24px 24px;
+                border-left: none;
+                border-top: 1px solid var(--card-border);
+                min-height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            section {
+                padding: 4rem 5%;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Ambient Backgrounds -->
+    <canvas id="star-canvas"></canvas>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <nav>
+        <a href="#home" class="nav-brand">
+            <span class="moon-icon">🌕</span>
+            <div class="logo">Moon Lover.</div>
+        </a>
+        <ul>
+            <li><a href="#home" class="nav-link">หน้าแรก</a></li>
+            <li><a href="#about" class="nav-link">เกี่ยวกับฉัน</a></li>
+            <li><a href="#projects" class="nav-link">ผลงานที่โดดเด่น</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <div class="hero-content">
+            <span class="greeting">Welcome to the Lunar Journey</span>
+            <h1>สวัสดีค่ะ <br>ฉันชื่อ <span>สร้อยศจี จันทวงค์</span></h1>
+            <p>นักพัฒนาเว็บไซต์และนักออกแบบ UI ที่รังสรรค์ประสบการณ์ดิจิทัลที่งดงามประดุจแสงจันทร์
+                เผยความงามผ่านโค้ดในทุกค่ำคืน</p>
+            <a href="#projects" class="btn">
+                <span>ชมผลงานทั้งหมด</span>
+                <span style="font-size: 1.2rem">✨</span>
+            </a>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title">เกี่ยวกับฉัน</h2>
+        <div class="profile-container">
+            <div class="profile-avatar">
+                👩‍💻
+            </div>
+            <div class="about-text">
+                <h3>ผู้ออกแบบและสร้างสรรค์</h3>
+                <p>ฉันมีความหลงใหลในการผสมผสานระหว่างเทคโนโลยีและความสวยงาม เพื่อสร้าง UI/UX
+                    ที่ล้ำสมัยและการทำงานเบื้องหลังที่ไร้รอยต่อ</p>
+                <p>ตลอดการเขียนโปรแกรมของฉัน ความพิถีพิถันคือหัวใจสำคัญ ไม่ว่าจะเป็นการทำเว็บ 3D ทรงพลัง
+                    แดชบอร์ดแบบเรียลไทม์ หรือแม้แต่เกมกระดานเล็กๆ ฉันใส่ใจในทุกรายละเอียด</p>
+                <div class="project-tags" style="margin-top: 2rem;">
+                    <span class="tag">UI/UX Elegance</span>
+                    <span class="tag">Vanilla JS</span>
+                    <span class="tag">Three.js</span>
+                    <span class="tag">Interactive Web</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title">ผลงานที่โดดเด่น</h2>
+        <div class="projects-grid">
+
+            <!-- Featured Showcase (Map) -->
+            <div class="project-card featured">
+                <div class="featured-content">
+                    <span class="project-icon">📍</span>
+                    <h3>Live GPS Northern Journey</h3>
+                    <p>แผนที่การเดินทางเชิงโต้ตอบแบบ Real-time สุดล้ำ แสดงพิกัด GPS ตลอดเส้นทางจากเชียงใหม่มายังพิษณุโลก
+                        พร้อมระบุสถานะหมุนจอด้วย GeoJSON และแสดงเวลาเดินทางจริง</p>
+                    <div class="project-tags">
+                        <span class="tag">Leaflet.js</span>
+                        <span class="tag">GeoJSON</span>
+                        <span class="tag">Live Tracking</span>
+                    </div>
+                    <a href="index.html" class="project-link">
+                        <span>เปิดใช้งานแผนที่เต็มรูปแบบ</span> 🚀
+                    </a>
+                </div>
+                <div class="map-container">
+                    <iframe src="index.html" title="GPS Map"></iframe>
+                </div>
+            </div>
+
+            <!-- Standard Cards -->
+            <div class="project-card">
+                <span class="project-icon">🚂</span>
+                <h3>3D Northern Express</h3>
+                <p>รถไฟจำลองการเดินทาง 3D ทะลุผ่านป่าดอกไม้ โดยอิงจากข้อมูลพิกัด GPS จริง
+                    พร้อมระบบควันที่สมจริงประดุจต้องมนตร์</p>
+                <div class="project-tags">
+                    <span class="tag">Three.js</span>
+                    <span class="tag">GPU Processing</span>
+                    <span class="tag">3D WebGL</span>
+                </div>
+                <a href="travel-3d.html" class="project-link">สัมผัสประสบการณ์ 3D ✨</a>
+            </div>
+
+            <div class="project-card">
+                <span class="project-icon">📡</span>
+                <h3>DustBoy Cyber-Dashboard</h3>
+                <p>หน้าปัดคุณภาพอากาศแบบ Real-time ดึงข้อมูลเซนเซอร์ DustBoy ผ่านระบบ MQTT พร้อมดีไซน์ Cyberpunk
+                    ล้ำอนาคต</p>
+                <div class="project-tags">
+                    <span class="tag">MQTT.js</span>
+                    <span class="tag">WebSocket</span>
+                    <span class="tag">IoT Data</span>
+                </div>
+                <a href="dustboy.html" class="project-link">เปิดแดชบอร์ดล้ำๆ 💠</a>
+            </div>
+
+            <div class="project-card">
+                <span class="project-icon">🎮</span>
+                <h3>จับคู่แสนสนุก (Fruit Match)</h3>
+                <p>เกมความจำวัดกึ๋น 5 ด่านที่ปลดล็อคตามลำดับ มีระบบจัดอันดับเซฟลงเครื่อง(LocalStorage)
+                    พร้อมแสงสีเสียงตอนชนะที่โคตรจึ้ง</p>
+                <div class="project-tags">
+                    <span class="tag">Game Dev</span>
+                    <span class="tag">Local Storage</span>
+                    <span class="tag">CSS Keyframes</span>
+                </div>
+                <a href="fruit-match.html" class="project-link">ทดลองเล่นเกม 🏆</a>
+            </div>
+
+            <div class="project-card">
+                <span class="project-icon">📄</span>
+                <h3>Modern Minimalist CV</h3>
+                <p>ประวัติส่วนตัวฉบับย่อ ดีไซน์สุดคลีนแต่ทรงพลัง โหลดไว ปรับปรุงจาก Semantic HTML เพียวๆ ไม่พึ่งพิง
+                    Framework เพื่อความเร็วสูงสุด</p>
+                <div class="project-tags">
+                    <span class="tag">Semantic HTML</span>
+                    <span class="tag">Clean CSS</span>
+                    <span class="tag">Minimalism</span>
+                </div>
+                <a href="cv-v2/index.html" class="project-link">ดูเรซูเม่ฉบับย่อ 📜</a>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 สร้อยศจี จันทวงค์. The Moon Lover Collection.</p>
+        <p class="oracle-sig">Guided by Moon Lover Oracle 🌕</p>
+    </footer>
+
+    <!-- Star Canvas Script -->
+    <script>
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, stars;
+
+        function initStars() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            stars = [];
+            const count = Math.floor((width * height) / 5000); // density
+
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 1.5,
+                    vx: (Math.random() - 0.5) * 0.2, // slow drift
+                    vy: (Math.random() - 0.5) * 0.2,
+                    alpha: Math.random(),
+                    alphaDir: Math.random() > 0.5 ? 1 : -1,
+                    speed: Math.random() * 0.02 + 0.005
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, width, height);
+
+            stars.forEach(s => {
+                // Update alpha for twinkling
+                s.alpha += s.speed * s.alphaDir;
+                if (s.alpha <= 0.1 || s.alpha >= 1) s.alphaDir *= -1;
+
+                // Move slightly
+                s.x += s.vx;
+                s.y += s.vy;
+
+                // Wrap around
+                if (s.x < 0) s.x = width;
+                if (s.x > width) s.x = 0;
+                if (s.y < 0) s.y = height;
+                if (s.y > height) s.y = 0;
+
+                // Draw
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(226, 232, 240, ${s.alpha})`;
+                ctx.fill();
+            });
+
+            requestAnimationFrame(drawStars);
+        }
+
+        window.addEventListener('resize', initStars);
+        initStars();
+        drawStars();
+
+        // Simple smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
